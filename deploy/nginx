@@ -2,10 +2,10 @@ server {
         listen 80;
         listen [::]:80;
 
-        root /home/johnathanstv/revamp-dashboard-frontend/dist;
+        root /home/ubuntu/test-dashboard/dist;
         index index.html index.htm index.nginx-debian.html;
 
-        server_name 34.74.44.219;
+        server_name 18.223.211.55;
 
         location / {
                 try_files $uri $uri/ =404;

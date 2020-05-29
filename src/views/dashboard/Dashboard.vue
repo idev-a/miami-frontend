@@ -199,11 +199,11 @@
       },
 
       updateValues () {
-        const startDate = this.$moment(this.dateRange.startDate).subtract(1, 'days').unix() * 1000
+        const startDate = this.$moment(this.dateRange.startDate).unix() * 1000
         const endDate = this.$moment(this.dateRange.endDate).unix() * 1000
         console.log(startDate, endDate)
-        this.data1 = this.totalSignedup.filter(item => item[0] >= startDate && item[0] < endDate).sort()
-        this.data2 = this.totalActive.filter(item => item[0] >= startDate && item[0] < endDate).sort()
+        this.data1 = this.totalSignedup.filter(item => item[0] >= startDate && item[0] <= endDate).sort()
+        this.data2 = this.totalActive.filter(item => item[0] >= startDate && item[0] <= endDate).sort()
 
         this.calcSummary()
       }
