@@ -158,7 +158,7 @@
         const lastWeekStart = new Date(date.setDate(thisWeekEnd.getDate() - 13))
         const lastWeekEnd = new Date(date.setDate(thisWeekEnd.getDate() - 7))
         return {
-            'Today': [today, today],
+            'Today': [new Date(), new Date()],
             'Yesterday': [yesterday, yesterday],
             'Last Week': [lastWeekStart, lastWeekEnd],
             'This month': [thisMonthStart, thisMonthEnd],
@@ -186,7 +186,7 @@
         this.data2.map(item => totalActives += item[1])
 
         this.stats.conversionRate = (totalActives / (totalSignups + totalActives) * 100).toFixed(2) + '%'
-        this.stats.totalSignups = totalActives.toString()
+        this.stats.totalSignups = totalSignups.toString()
         this.stats.totalActives = totalActives.toString()
       },
       filterRange (date) {
@@ -201,6 +201,7 @@
       updateValues () {
         const startDate = this.$moment(this.dateRange.startDate).subtract(1, 'days').unix() * 1000
         const endDate = this.$moment(this.dateRange.endDate).unix() * 1000
+        console.log(startDate, endDate)
         this.data1 = this.totalSignedup.filter(item => item[0] >= startDate && item[0] < endDate).sort()
         this.data2 = this.totalActive.filter(item => item[0] >= startDate && item[0] < endDate).sort()
 
