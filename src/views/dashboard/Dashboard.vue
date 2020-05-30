@@ -171,7 +171,7 @@
             'Last Week': [lastWeekStart, lastWeekEnd],
             'This month': [new Date(date.getFullYear(), date.getMonth(), 1), new Date(date.getFullYear(), date.getMonth() + 1, 0)],
             'Last month': [new Date(date.getFullYear(), date.getMonth() - 1, 1), new Date(date.getFullYear(), date.getMonth(), 0)],
-            'This year': [new Date(today.getFullYear(), 0, 1), new Date(today.getFullYear(), 11, 31)],
+            'This year': [new Date(date.getFullYear(), 0, 1), new Date(date.getFullYear(), 11, 31)],
             'Total': [startDate, endDate]
         }
       },
