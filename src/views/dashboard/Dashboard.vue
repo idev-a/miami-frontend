@@ -18,10 +18,21 @@
             v-model="dateRange"
             @update="updateValues"
             :ranges="ranges"
-           :locale-data="{ firstDay: 1, format: 'DD-MM-YYYY' }"
+           :locale-data="{ 
+              direction: 'ltr',
+              format: 'mm/dd/yyyy',
+              separator: ' - ',
+              applyLabel: 'Apply',
+              cancelLabel: 'Cancel',
+              weekLabel: 'W',
+              customRangeLabel: 'Custom Range',
+              daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+              monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              firstDay: 0
+           }"
           >
             <template v-slot:input="picker" style="min-width: 350px;">
-                {{ picker.startDate | date }} - {{ picker.endDate | date }}
+                {{ dateFormat(picker.startDate) }} - {{ dateFormat(picker.endDate) }}
             </template>
           </date-range-picker>
           <v-spacer></v-spacer>
@@ -145,24 +156,21 @@
       ranges () {
         let today = new Date()
         today.setHours(0, 0, 0, 0)
+        const date = new Date()
 
         let yesterday = new Date()
         yesterday.setDate(today.getDate() - 1)
         yesterday.setHours(0, 0, 0, 0);
         const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
         const startDate = new Date(today.setDate(endDate.getDate() - 500))
-        const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1)
-        const thisMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-        const date = new Date()
-        const thisWeekEnd = new Date(date.setDate(date.getDate() - (date.getDay() - 1) + 6));
-        const lastWeekStart = new Date(date.setDate(thisWeekEnd.getDate() - 13))
-        const lastWeekEnd = new Date(date.setDate(thisWeekEnd.getDate() - 7))
+        const lastWeekStart = new Date(this.$moment().subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD'))
+        const lastWeekEnd = new Date(this.$moment().subtract(1, 'weeks').endOf('isoWeek').format('YYYY-MM-DD'))
         return {
             'Today': [new Date(), new Date()],
             'Yesterday': [yesterday, yesterday],
             'Last Week': [lastWeekStart, lastWeekEnd],
-            'This month': [thisMonthStart, thisMonthEnd],
-            'Last month': [new Date(today.getFullYear(), today.getMonth() - 1, 1), new Date(today.getFullYear(), today.getMonth(), 0)],
+            'This month': [new Date(date.getFullYear(), date.getMonth(), 1), new Date(date.getFullYear(), date.getMonth() + 1, 0)],
+            'Last month': [new Date(date.getFullYear(), date.getMonth() - 1, 1), new Date(date.getFullYear(), date.getMonth(), 0)],
             'This year': [new Date(today.getFullYear(), 0, 1), new Date(today.getFullYear(), 11, 31)],
             'Total': [startDate, endDate]
         }
@@ -180,6 +188,9 @@
     },
 
     methods: {
+      dateFormat (date) {
+        return this.$moment(date).format('MM/DD/YYYY')
+      },
       calcSummary () {
         let totalSignups = 0, totalActives = 0
         this.data1.map(item => totalSignups += item[1])
