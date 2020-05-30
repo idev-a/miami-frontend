@@ -6,7 +6,7 @@
   >
     <v-card
       icon="mdi-account-multiple"
-      title="Owners"
+      title="Dashboard"
       class="px-5 py-3"
     >
       <v-card-title>
@@ -121,8 +121,8 @@
     data () {
       let today = new Date()
       today.setHours(0, 0, 0, 0)
-      const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-      const startDate = new Date(today.setDate(endDate.getDate() - 500))
+      const endDate = new Date(this.$moment().endOf('year').format('YYYY-MM-DD HH:mm:ss'))
+      const startDate = new Date(this.$moment().subtract(500, 'days').startOf('year').format('YYYY-MM-DD HH:mm:ss'))
       return {
         loading: true,
         menu: false,

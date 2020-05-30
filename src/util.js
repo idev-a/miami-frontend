@@ -4,11 +4,11 @@ import Papa from "papaparse";
 
 import { companyId } from './api'
 
-Highcharts.setOptions({
-    global: {
-        useUTC: false
-    }
-});
+// Highcharts.setOptions({
+//     global: {
+//         useUTC: false
+//     }
+// });
 
 export const DOMAIN_LIST = [
   /* Default domains included */
