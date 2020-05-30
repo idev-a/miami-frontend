@@ -154,24 +154,23 @@
         return comboChart(this.data1, this.data2)
       },
       ranges () {
-        let today = new Date()
-        today.setHours(0, 0, 0, 0)
         const date = new Date()
+        let today = new Date(this.$moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'))
+        const todayEnd = new Date(this.$moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'))
 
-        let yesterday = new Date()
-        yesterday.setDate(today.getDate() - 1)
-        yesterday.setHours(0, 0, 0, 0);
-        const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-        const startDate = new Date(today.setDate(endDate.getDate() - 500))
-        const lastWeekStart = new Date(this.$moment().subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD'))
-        const lastWeekEnd = new Date(this.$moment().subtract(1, 'weeks').endOf('isoWeek').format('YYYY-MM-DD'))
+        let yesterday = new Date(this.$moment().subtract(1, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'))
+        const yesterdayEnd = new Date(this.$moment().subtract(1, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'))
+        const endDate = new Date(this.$moment().endOf('year').format('YYYY-MM-DD HH:mm:ss'))
+        const startDate = new Date(this.$moment().subtract(500, 'days').startOf('year').format('YYYY-MM-DD HH:mm:ss'))
+        const lastWeekStart = new Date(this.$moment().subtract(1, 'weeks').startOf('week').format('YYYY-MM-DD HH:mm:ss'))
+        const lastWeekEnd = new Date(this.$moment().subtract(1, 'weeks').endOf('week').format('YYYY-MM-DD HH:mm:ss'))
         return {
-            'Today': [new Date(), new Date()],
-            'Yesterday': [yesterday, yesterday],
+            'Today': [today, todayEnd],
+            'Yesterday': [yesterday, yesterdayEnd],
             'Last Week': [lastWeekStart, lastWeekEnd],
-            'This month': [new Date(date.getFullYear(), date.getMonth(), 1), new Date(date.getFullYear(), date.getMonth() + 1, 0)],
-            'Last month': [new Date(date.getFullYear(), date.getMonth() - 1, 1), new Date(date.getFullYear(), date.getMonth(), 0)],
-            'This year': [new Date(date.getFullYear(), 0, 1), new Date(date.getFullYear(), 11, 31)],
+            'This month': [new Date(this.$moment().startOf('month').format('YYYY-MM-DD HH:mm:ss')), new Date(this.$moment().endOf('month').format('YYYY-MM-DD HH:mm:ss'))],
+            'Last month': [new Date(this.$moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD HH:mm:ss')), new Date(this.$moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD HH:mm:ss'))],
+            'This year': [new Date(this.$moment().startOf('year').format('YYYY-MM-DD HH:mm:ss')), endDate],
             'Total': [startDate, endDate]
         }
       },
@@ -189,14 +188,14 @@
 
     methods: {
       dateFormat (date) {
-        return this.$moment(date).format('MM/DD/YYYY')
+        return this.$moment(date).format('MM/DD/YYYY HH:mm:ss')
       },
       calcSummary () {
         let totalSignups = 0, totalActives = 0
         this.data1.map(item => totalSignups += item[1])
         this.data2.map(item => totalActives += item[1])
 
-        this.stats.conversionRate = (totalActives / (totalSignups + totalActives) * 100).toFixed(2) + '%'
+        this.stats.conversionRate = (totalActives / (totalSignups) * 100).toFixed(2) + '%'
         this.stats.totalSignups = totalSignups.toString()
         this.stats.totalActives = totalActives.toString()
       },
