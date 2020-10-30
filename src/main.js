@@ -21,8 +21,7 @@ import './plugins/vee-validate'
 import './plugins/vue-world-map'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
-import IdleVue from 'idle-vue'
-import VueFriendlyIframe from 'vue-friendly-iframe';
+// import IdleVue from 'idle-vue'
 
 Vue.config.productionTip = false
 
@@ -34,12 +33,11 @@ const eventsHub = new Vue({
   render: h => h(App),
 }).$mount('#app')
 
-Vue.use(IdleVue, {
-  eventEmitter: eventsHub,
-  store,
-  idleTime: 15*60*1000, // 15 mins  15*60*1000 = 900000
-  startAtIdle: false
-});
+// Vue.use(IdleVue, {
+//   eventEmitter: eventsHub,
+//   store,
+//   idleTime: 15*60*1000, // 15 mins  15*60*1000 = 900000
+//   startAtIdle: false
+// });
 
-Vue.use(VueFriendlyIframe);
 Vue.use(require('vue-moment'));

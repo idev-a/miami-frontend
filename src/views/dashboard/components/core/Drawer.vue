@@ -23,7 +23,7 @@
       <v-list-item-content>
         <v-list-item-title class="text-uppercase font-weight-regular display-2">
           <span class="logo-mini">{{ $t('SD') }}</span>
-          <span class="logo-normal">{{ $t('Secure Dashboard') }}</span>
+          <span class="logo-normal">{{ $t('Dashboard') }}</span>
         </v-list-item-title>
       </v-list-item-content>
     </v-list-item>
