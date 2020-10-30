@@ -13,7 +13,11 @@
         Dashboard
       </v-card-title>
       <v-card-text>
-        <v-btn class="primary mt-3" :disabled="is_new" @click="run_sysco_scraper">Run Scraper</v-btn>
+        <v-btn class="primary mt-3" :disabled="!is_new" @click="run_sysco_scraper">Run Scraper</v-btn>
+        <div v-if="!is_new" class="mt-3">
+          <div>{{message}}</div>
+          <div class="mt-2">If you want to run the scraper again, please refresh the page.</div>
+        </div>
       </v-card-text>
     </v-card>
 
@@ -49,7 +53,7 @@
         snackbar: false,
         message: '',
         color: 'success',
-        is_new: false
+        is_new: true
       }
     },
 
@@ -58,10 +62,15 @@
 
     methods: {
       async run_sysco_scraper() {
-        const res = await Get('admin/sysco')
+        try {
+          const res = await Get('admin/sysco')
+          this.message = 'Successfully run the scraper, you will get notificed via email about the completion soon.'
+        } catch (e) {
+          this.color = 'default'
+          this.message = 'Something went wrong. Please contact the admin.'
+        }
         this.snackbar = true
-        this.message = 'Successfully run the scraper, you will get notificed via email about the completion soon.'
-        this.is_new = true
+        this.is_new = false
       }
     },
   }
