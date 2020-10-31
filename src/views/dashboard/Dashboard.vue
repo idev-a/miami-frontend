@@ -13,7 +13,10 @@
         Dashboard
       </v-card-title>
       <v-card-text>
-        <v-btn class="primary mt-3" :disabled="!is_new" @click="run_sysco_scraper">Run Scraper</v-btn>
+        <div class="d-flex justfify-around">
+          <v-btn class="primary mt-3" :disabled="!is_new" @click="run_sysco_scraper">Run Scraper</v-btn>
+          <v-btn class="success mt-3" @click="downloadFile">Download</v-btn>
+        </div>
         <div v-if="!is_new" class="mt-3">
           <div>{{message}}</div>
           <div class="mt-2">If you want to run the scraper again, please refresh the page.</div>
@@ -71,6 +74,15 @@
         }
         this.snackbar = true
         this.is_new = false
+      },
+      downloadFile () {
+        var link = document.createElement("a");
+        link.setAttribute("href", 'http://3.230.135.45/api/static/download');
+        link.setAttribute("download", 'Item List.xlsx');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }
     },
   }
