@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-import publicdata from './public'
 
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
@@ -27,6 +26,5 @@ export default new Vuex.Store({
 
   },
   modules: { 
-    publicdata
   },
 })

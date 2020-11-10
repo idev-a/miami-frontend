@@ -4,6 +4,10 @@ export const BASE_API = process.env.VUE_APP_BACKEND_URL
 // export const BASE_API = 'http://localhost:5000'
 // export const BASE_API = 'https://urinotsecure.revampcybersecurity.com'
 
+const getAuthToken = () => {
+  return localStorage.getItem('jwt')
+}
+
 export const Call = async (url, method, data={}) => {
 	let res = {}
 	try {
@@ -11,6 +15,7 @@ export const Call = async (url, method, data={}) => {
 		url: `${BASE_API}/api/${url}`,
 		headers: {
 		  'Content-Type': 'application/json; charset=utf-8',
+		  'Authorization': getAuthToken()
 		},
 		method,
 		data

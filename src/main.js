@@ -20,6 +20,7 @@ import './plugins/chartist'
 import './plugins/vee-validate'
 import './plugins/vue-world-map'
 import vuetify from './plugins/vuetify'
+import VuetifyDialog from 'vuetify-dialog'
 import i18n from './i18n'
 // import IdleVue from 'idle-vue'
 
@@ -32,6 +33,12 @@ const eventsHub = new Vue({
   i18n,
   render: h => h(App),
 }).$mount('#app')
+
+Vue.use(VuetifyDialog, {
+  context: {
+    vuetify
+  }
+})
 
 // Vue.use(IdleVue, {
 //   eventEmitter: eventsHub,

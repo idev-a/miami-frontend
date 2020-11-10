@@ -39,6 +39,10 @@
     display: none;
   }
 
+  .v-data-table > .v-data-table__wrapper > table > tbody > tr > td.detail {
+    padding: 0;
+  }
+
   tr.v-data-table__mobile-table-row:nth-of-type(odd) td.v-data-table__mobile-row{
     background: rgba(0, 0, 0, .05);
   }

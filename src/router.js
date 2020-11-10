@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 let router = new Router({
-  mode: 'hash',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -54,6 +54,9 @@ let router = new Router({
           name: 'Dashboard',
           path: '',
           component: () => import('@/views/dashboard/Dashboard'),
+          meta: {
+            requiresAuth: true
+          }
         },
       ],
     },
@@ -74,33 +77,33 @@ let router = new Router({
   ],
 })
 
-// router.beforeEach((to, from, next) => {
-//     if(to.matched.some(record => record.meta.requiresAuth)) {
-//         if (localStorage.getItem('jwt') == null || localStorage.getItem('jwt') == 'null') {
-//             next({
-//                 path: '/pages/login',
-//                 params: { nextUrl: to.fullPath }
-//             })
-//         } else {
-//             let user = {}
-//             try {
-//               user = JSON.parse(localStorage.getItem('user'))
-//             } catch (e) {}
-//             if(to.matched.some(record => record.meta.is_admin)) {
-//                 if(user.role == 'Admin'){
-//                     next()
-//                 }
-//                 else{
-//                     next({ name: 'Dashboard'})
-//                 }
-//             }else {
-//                 next()
-//             }
-//         }
-//     } else {
-//         next()
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+        if (localStorage.getItem('jwt') == null || localStorage.getItem('jwt') == 'null') {
+            next({
+                path: '/pages/login',
+                params: { nextUrl: to.fullPath }
+            })
+        } else {
+            let user = {}
+            try {
+              user = JSON.parse(localStorage.getItem('user'))
+            } catch (e) {}
+            if(to.matched.some(record => record.meta.is_admin)) {
+                if(user.role == 'Admin'){
+                    next()
+                }
+                else{
+                    next({ name: 'Dashboard'})
+                }
+            }else {
+                next()
+            }
+        }
+    } else {
+        next()
+    }
+})
 
 
 export default router

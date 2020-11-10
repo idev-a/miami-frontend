@@ -53,14 +53,14 @@
 
     <div class="mx-3" />
 
-    <v-btn
+<!--     <v-btn
       class="ml-2"
       min-width="0"
       text
       to="/"
     >
       <v-icon>mdi-view-dashboard</v-icon>
-    </v-btn>
+    </v-btn> -->
 
     <!-- <v-btn
       class="ml-2"
@@ -115,7 +115,7 @@
       </v-list>
     </v-menu> -->
 
-    <!-- <v-menu
+    <v-menu
       bottom
       left
       min-width="200"
@@ -158,7 +158,7 @@
           </app-bar-item>
         </template>
       </v-list>
-    </v-menu> -->
+    </v-menu>
   </v-app-bar>
 </template>
 
@@ -214,9 +214,9 @@
         'Another one',
       ],
       profile: [
-        { title: 'Profile', name: 'My Profile' },
+        // { title: 'Profile', name: 'My Profile' },
         // { title: 'Settings', name: 'Settings' },
-        { divider: true },
+        // { divider: true },
         { title: 'Log out', name: 'Login' },
       ],
     }),

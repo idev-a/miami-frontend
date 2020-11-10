@@ -55,14 +55,6 @@
               required
             />
 
-            <v-checkbox
-              v-model="form.opt_out"
-            >
-              <template v-slot:label>
-                <div class="black--text">Would you like to receive <b>Daily Security Tips</b>?</div>
-              </template>
-            </v-checkbox>
-
             <v-btn
               :loading="loading"
               color="primary"
@@ -181,7 +173,6 @@
           const data = {
             username: this.form.username,
             email: this.form.email,
-            daily_tips_opt_out: !this.form.opt_out
           }
           axios({
             url: `${BASE_API}/api/users/register`,
