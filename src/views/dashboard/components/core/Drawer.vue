@@ -90,8 +90,13 @@
       items: [
         {
           icon: 'mdi-view-dashboard',
-          title: 'dashboard',
+          title: 'Dashboard',
           to: '/',
+        },
+        {
+          icon: 'mdi-clock',
+          title: 'History',
+          to: '/history',
         },
       ],
     }),

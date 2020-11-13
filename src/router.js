@@ -51,9 +51,17 @@ let router = new Router({
       children: [
         // Dashboard
         {
-          name: 'Dashboard',
+          name: 'Home',
           path: '',
           component: () => import('@/views/dashboard/Dashboard'),
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          name: 'History',
+          path: 'history',
+          component: () => import('@/views/dashboard/History'),
           meta: {
             requiresAuth: true
           }
