@@ -265,6 +265,7 @@
         alertEmails: null,
         newEmail: '',
         emailValid: true,
+        checkInterval: null,
         rules: {
           required: value => {
             return !!value || 'This field is required.'
@@ -281,7 +282,14 @@
     },
 
     mounted () {
-      this.readData()
+      this.readTodayData()
+
+      const self = this
+      this.checkInterval = setInterval(function() { self.readTodayData() }, 10000)
+    },
+
+    beforeDestroy () {
+      clearInterval(this.checkInterval)
     },
 
     computed: {
@@ -307,11 +315,11 @@
         this.loading = false
       },
       async readTodayData () {
-        this.loading = true
+        // this.loading = true
         const res = await Get('admin/read/today')
-        this.showSnack(res)
+        // this.showSnack(res)
         this.meetings = res.items
-        this.loading = false
+        // this.loading = false
       },
       async readAlertEmails () {
         this.loading = true
@@ -427,9 +435,7 @@
 
         return bytes.toFixed(dp) + ' ' + units[u];
       },
-      confirmDlg (message, func) {
-        
-      }
+      
     }
   }
 </script>

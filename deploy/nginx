@@ -8,7 +8,11 @@ server {
         server_name 74.207.225.24;
 
         location / {
-                try_files $uri $uri/ =404;
+                try_files $uri $uri/ /index.html;
+        }
+
+        location /api {
+        	proxy_pass http://unix:/root/web/miami/miami.sock;
         }
 }
 
