@@ -13,7 +13,7 @@
         Dashboard
       </v-card-title>
       <v-card-text>
-        <v-tooltip bottom>
+        <v-tooltip v-if="false" bottom>
           <template v-slot:activator="{ on }">
             <v-btn class="success mt-3" :loading="loading" v-on="on" @click="readTodayData">
               Today 
@@ -93,8 +93,17 @@
 
                     <v-list-item-content>
                       <v-list-item-title>{{ recording.file_name }}</v-list-item-title>
-                      <div :class="getStatusColor(recording.status)">
-                        {{ getStatus(recording)}}
+                      <div class="d-flex align-center" :class="getStatusColor(recording.status)">
+                        <div class="mr-2">{{ getStatus(recording)}}</div>
+                        <v-progress-linear 
+                          v-if="isUploading(recording)" 
+                          v-model="recording.progress"
+                          class="mr-6" 
+                          height="15" 
+                          color="success" 
+                        >
+                          <strong>{{ Math.ceil(recording.progress) }}%</strong>
+                        </v-progress-linear>
                       </div>
                     </v-list-item-content>
 
@@ -299,13 +308,9 @@
       },
       registerInterval() {
         const self = this
-        this.checkInterval = setInterval(function() { self.readTodayData() }, 10000)
+        this.checkInterval = setInterval(function() { self.readTodayData() }, 5000)
       },
       async readData () {
-        console.log(this.checkInterval)
-        clearInterval(this.checkInterval)
-        
-
         this.loading = true
         const res = await Get('admin/read')
         this.meetings = res.items
@@ -313,10 +318,6 @@
         this.loading = false
       },
       async readTodayData () {
-        if (!this.checkInterval) {
-          this.registerInterval()
-        }
-
         // this.loading = true
         const res = await Get('admin/read/today')
         // this.showSnack(res)
@@ -404,6 +405,9 @@
         } else if (status == 'completed') {
           return 'success--text'
         }
+      },
+      isUploading (recording) {
+        return recording.status == 'uploading'
       },
       showRecordings (item) {
         this.currentMeeting = item
