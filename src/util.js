@@ -1,6 +1,7 @@
 const moment = require('moment');
 const Highcharts = require('highcharts');
 import Papa from "papaparse";
+import upperFirst from 'lodash/upperFirst'
 
 import { companyId } from './api'
 
@@ -634,8 +635,64 @@ export const beautifyDateZ = (date) => {
   return moment(date, 'YYYYMMDDHHmmss').format('MMM DD YYYY HH:mm:ss')
 }
 
+export const changeDate = (date) => {
+  return moment(date).format('MM/DD/YYYY')
+}
+
 export const removeQuotes = (val) => {
   return val.replace(/\"/g, "")
+}
+
+export const getFileIcon = (fileName) => {
+  const ext = fileName.substr(fileName.lastIndexOf('.')+1, fileName.length).toLowerCase()
+  let icon = 'mdi-file-video'
+  if (ext == 'mp4') {
+    icon = 'mdi-file-video'
+  } else if (ext == 'm4a') {
+    icon = 'mdi-book-music'
+  } else {
+    icon = 'mdi-file'
+  }
+  return icon
+}
+export const getStatus = (recording) => {
+  let status = recording.status
+  if (recording.status == 'error') {
+    status = recording.status + ': ' + recording.message
+  }
+  return upperFirst(status)
+}
+
+export const getStatusColor = (status) => {
+  if (status == 'error') {
+    return 'red--text'
+  } else if (status == '') {
+    return 'secondary--text'
+  } else if (status == 'completed') {
+    return 'success--text'
+  }
+}
+
+export const getFileSize = (bytes, si=true, dp=1) => {
+  bytes = bytes | 0
+
+  const thresh = si ? 1000 : 1024;
+
+  if (Math.abs(bytes) < thresh) {
+    return bytes + ' B';
+  }
+
+  const units = si 
+    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
+    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+  let u = -1;
+  const r = 10**dp;
+
+  do {
+    bytes /= thresh;
+    ++u;
+  } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+  return bytes.toFixed(dp) + ' ' + units[u];
 }
 
 export const readNewLine = (val) => {

@@ -49,8 +49,11 @@
           show-expand
           :items-per-page="page"
           @click:row="showRecordings"
-          item-key="meeting_id"
+          item-key="id"
         > 
+          <template #item.start_time="{item}">
+            <span>{{ changeDate(item.start_time)}}</span>
+          </template>
           <template #item.action="{item}">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
@@ -132,7 +135,7 @@
 
 <script>
   import { Get, Post, BASE_API } from '@/api'
-  import upperFirst from 'lodash/upperFirst'
+  import { getFileIcon, changeDate, getStatus, getStatusColor, getFileSize } from '@/util'
 
   export default {
     name: 'History',
@@ -204,6 +207,12 @@
     },
 
     methods: {
+      getFileIcon,
+      changeDate,
+      getStatus,
+      getStatusColor,
+      getFileSize,
+
       showSnack(res) {
         this.snackbar = true
         this.color = res.status
@@ -218,34 +227,7 @@
         this.showSnack(res)
         this.loading = false
       },
-      getFileIcon (fileName) {
-        const ext = fileName.substr(fileName.lastIndexOf('.')+1, fileName.length).toLowerCase()
-        let icon = 'mdi-file-video'
-        if (ext == 'mp4') {
-          icon = 'mdi-file-video'
-        } else if (ext == 'm4a') {
-          icon = 'mdi-book-music'
-        } else {
-          icon = 'mdi-file'
-        }
-        return icon
-      },
-      getStatus (recording) {
-        let status = recording.status
-        if (recording.status == 'error') {
-          status = recording.status + ': ' + recording.message
-        }
-        return upperFirst(status)
-      },
-      getStatusColor (status) {
-        if (status == 'error') {
-          return 'red--text'
-        } else if (status == '') {
-          return 'secondary--text'
-        } else if (status == 'completed') {
-          return 'success--text'
-        }
-      },
+      
       showRecordings (item) {
         this.currentMeeting = item
         if (this.expanded.includes(item)) {
@@ -254,27 +236,6 @@
         } else {
           this.expanded.push(item)
         }
-      },
-      getFileSize (bytes, si=true, dp=1) {
-        bytes = bytes | 0
-
-        const thresh = si ? 1000 : 1024;
-
-        if (Math.abs(bytes) < thresh) {
-          return bytes + ' B';
-        }
-
-        const units = si 
-          ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
-          : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-        let u = -1;
-        const r = 10**dp;
-
-        do {
-          bytes /= thresh;
-          ++u;
-        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
-        return bytes.toFixed(dp) + ' ' + units[u];
       },
     }
   }
