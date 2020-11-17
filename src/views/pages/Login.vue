@@ -57,7 +57,7 @@
 
             <v-btn
               class="ma-1 mt-4 mb-6"
-              color="primary"
+              color="success"
               :loading="loading"
               @click="request"
             >
@@ -87,7 +87,7 @@
 
             <v-btn
               class="ma-1 mt-1"
-              color="primary"
+              color="success"
               :loading="loading"
               @click="submit"
             >
@@ -169,7 +169,7 @@
       },
       gotoDashboard (auth_token) {
         localStorage.setItem('jwt', auth_token)
-        this.$router.push({ name: "Dashboard" });
+        this.$router.push({ name: "Home" });
       },
       resetForm () {
         this.form = Object.assign({}, this.defaultForm)

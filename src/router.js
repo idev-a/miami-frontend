@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import jwtDecode from 'jwt-decode'
 import Router from 'vue-router'
 
 Vue.use(Router)
@@ -66,6 +67,15 @@ let router = new Router({
             requiresAuth: true
           }
         },
+        {
+          name: 'Users',
+          path: 'admin/users',
+          component: () => import('@/views/dashboard/component/User'),
+          meta: {
+            requiresAuth: true,
+            admin: true
+          }
+        },
       ],
     },
     {
@@ -86,31 +96,33 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)) {
-        if (localStorage.getItem('jwt') == null || localStorage.getItem('jwt') == 'null') {
-            next({
-                path: '/pages/login',
-                params: { nextUrl: to.fullPath }
-            })
-        } else {
-            let user = {}
-            try {
-              user = JSON.parse(localStorage.getItem('user'))
-            } catch (e) {}
-            if(to.matched.some(record => record.meta.is_admin)) {
-                if(user.role == 'Admin'){
-                    next()
-                }
-                else{
-                    next({ name: 'Dashboard'})
-                }
-            }else {
-                next()
-            }
-        }
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('jwt') == null || localStorage.getItem('jwt') == 'null') {
+      next({
+        path: '/pages/login',
+        params: { nextUrl: to.fullPath }
+      })
     } else {
+      let user = {}
+      try {
+        user = jwtDecode(localStorage.getItem('jwt'))
+      } catch (e) {
+        console.log(e)
+      }
+      if(to.matched.some(record => record.meta.is_admin)) {
+        if(user.role == 'Admin'){
+          next()
+        }
+        else{
+          next({ name: 'Dashboard'})
+        }
+      } else {
         next()
+      }
     }
+  } else {
+    next()
+  }
 })
 
 

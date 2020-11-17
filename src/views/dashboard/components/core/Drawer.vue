@@ -75,6 +75,7 @@
   import {
     mapState,
   } from 'vuex'
+  import jwtDecode from 'jwt-decode'
 
   export default {
     name: 'DashboardCoreDrawer',
@@ -88,6 +89,18 @@
 
     data: () => ({
       items: [
+        {
+        group: '/admin',
+        icon: 'mdi-account-multiple',
+        title: 'Admin',
+        is_admin: true,
+        children: [
+            {
+                title: 'Users',
+                to: 'users',
+            }
+          ]
+        },
         {
           icon: 'mdi-view-dashboard',
           title: 'Dashboard',
@@ -142,10 +155,25 @@
 
     methods: {
       mapItem (item) {
-        return {
-          ...item,
-          children: item.children ? item.children.map(this.mapItem) : undefined,
-          title: this.$t(item.title),
+        try {
+          this.user = jwtDecode(localStorage.getItem('jwt'))
+        } catch (e) {
+          console.log(e)
+        }
+        if (item.is_admin) {
+          if (this.user.role === 'Admin') {
+            return {
+              ...item,
+              children: item.children ? item.children.map(this.mapItem) : undefined,
+              title: this.$t(item.title),
+            }
+          }
+        } else {
+          return {
+            ...item,
+            children: item.children ? item.children.map(this.mapItem) : undefined,
+            title: this.$t(item.title),
+          }
         }
       },
     },

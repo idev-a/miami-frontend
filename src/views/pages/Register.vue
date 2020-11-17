@@ -32,7 +32,7 @@
           <template v-slot:heading>
             <div class="text-center">
               <div class="display-2 font-weight-bold">
-                Register to Secure Dashboard
+                Register
               </div>
             </div>
           </template>
@@ -57,7 +57,7 @@
 
             <v-btn
               :loading="loading"
-              color="primary"
+              color="success"
               class="display-1"
               :diabled="formHasErrors"
               @click="submit"

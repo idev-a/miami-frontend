@@ -38,77 +38,7 @@
         <v-spacer></v-spacer>
       </v-card-title>
       <v-card-text>
-        <v-data-table
-          :loading="loading"
-          :headers="headers"
-          :items="meetings"
-          :search="search"
-          fixed-header
-          single-expand
-          :expanded.sync="expanded"
-          show-expand
-          :items-per-page="page"
-          @click:row="showRecordings"
-          item-key="id"
-        > 
-          <template #item.start_time="{item}">
-            <span>{{ changeDate(item.start_time)}}</span>
-          </template>
-          <template #item.action="{item}">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-btn 
-                  text 
-                  color="primary"
-                  v-on="on"
-                  @click.stop="showRecordings(item)"
-                >
-                  Recordings
-                </v-btn>
-              </template>
-              <span>Show Recordings</span>
-            </v-tooltip>
-          </template>
-           <template v-slot:expanded-item="{ headers, item }">
-            <td class="detail" :colspan="headers.length">
-              <v-list 
-                style="max-height: 350px"
-                class="overflow-y-auto"
-                two-line>
-                <template
-                  v-for="recording in item.recording_files"
-                >
-                  <v-list-item>
-                    <v-list-item-icon>
-                      <v-icon color="indigo">
-                        {{ getFileIcon(recording.file_name)}}
-                      </v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                      <v-list-item-title>{{ recording.file_name }}</v-list-item-title>
-                      <div :class="getStatusColor(recording.status)">
-                        {{ getStatus(recording)}}
-                      </div>
-                    </v-list-item-content>
-
-                    <div
-                      class="align-center d-flex flex-column justify-end"
-                    >
-                      <v-list-item-icon class="ma-0 mb-1">
-                        <v-icon color="indigo">
-                          mdi-clock
-                        </v-icon>
-                        {{ recording.run_at }}
-                      </v-list-item-icon>
-                      <span>{{ getFileSize(recording.file_size) }}</span>
-                    </div>
-                  </v-list-item>
-                </template>
-              </v-list>
-            </td>
-          </template>
-        </v-data-table>
+        <custom-table :meetings="meetings" :loading="loading" :search="search" />
       </v-card-text>
     </v-card>
 
@@ -135,44 +65,22 @@
 
 <script>
   import { Get, Post, BASE_API } from '@/api'
-  import { getFileIcon, changeDate, getStatus, getStatusColor, getFileSize } from '@/util'
 
   export default {
     name: 'History',
 
+    components: {
+      CustomTable: () => import('./component/CustomTable')
+    },
+
     data () {
       return {
-        loading: false,
         snackbar: false,
         message: '',
         color: 'success',
+        loading: false,
         search: '',
         meetings: [],
-        expanded: [],
-        selectedItem: [],
-        currentMeeting: null,
-        headers: [
-          {
-            text: 'Topic',
-            value: 'topic'
-          },
-          {
-            text: 'Start Time',
-            value: 'start_time'
-          },
-          {
-            text: '# of Recordings',
-            value: 'cnt_files'
-          },
-          // {
-          //   text: 'Status',
-          //   value: ''
-          // },
-          {
-            text: '',
-            value: 'action'
-          }
-        ],
         alertDlg: false,
         alertEmails: null,
         newEmail: '',
@@ -198,45 +106,24 @@
     },
 
     computed: {
-      page() {
-        return Number(localStorage.getItem('page')) || 5
-      },
       emails () {
         return this.alertEmails && this.alertEmails.cc_emails && this.alertEmails.cc_emails.split(',') || []
       }
     },
 
     methods: {
-      getFileIcon,
-      changeDate,
-      getStatus,
-      getStatusColor,
-      getFileSize,
-
       showSnack(res) {
         this.snackbar = true
         this.color = res.status
         this.message = res.message
       },
       async readData () {
-        console.log(this.checkInterval)
-
         this.loading = true
         const res = await Get('admin/read')
         this.meetings = res.items
         this.showSnack(res)
         this.loading = false
-      },
-      
-      showRecordings (item) {
-        this.currentMeeting = item
-        if (this.expanded.includes(item)) {
-          const index = this.expanded.indexOf(item);
-          this.expanded.splice(index, 1);
-        } else {
-          this.expanded.push(item)
-        }
-      },
+      }
     }
   }
 </script>

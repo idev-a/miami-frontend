@@ -12,30 +12,34 @@ export const Call = async (url, method, data={}) => {
 	let res = {}
 	try {
 	  res = await axios({
-		url: `${BASE_API}/api/${url}`,
-		headers: {
-		  'Content-Type': 'application/json; charset=utf-8',
-		  'Authorization': getAuthToken()
-		},
-		method,
-		data
+			url: `${BASE_API}/api/${url}`,
+			headers: {
+			  'Content-Type': 'application/json; charset=utf-8',
+			  'Authorization': getAuthToken()
+			},
+			method,
+			data
 	  })
 	} catch(err) {
 	  res = err.response
 	  if (res && res.status == 403) {
-		// authentication token is expired.
-		// localStorage.removeItem('jwt')
-		// localStorage.setItem('message', err.response.data.message)
-		// location.href = '/pages/login'
+			// authentication token is expired.
+			localStorage.removeItem('jwt')
+			localStorage.setItem('message', err.response.data.message)
+			location.href = '/pages/login'
 	  }
 	}
 	return res.data
-  }
+}
   
-  export const Post = async (url, data) => {
+export const Post = async (url, data) => {
 	return await Call(url, 'POST', data)
   }
   
-  export const Get = async (url) => {
+export const Get = async (url) => {
 	return await Call(url, 'GET')
   }
+
+export const Put = async (url, data) => {
+  return await Call(url, 'PUT', data)
+}
